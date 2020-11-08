@@ -1,6 +1,7 @@
 # SwissManager
 Manager for tournaments.
-
-Start program from terminal using "python3 SwissManager.py"
-
-Use "master" branch for MacOS, "win" branch, if you're using windows.
+# basic
+Start program from terminal using "python3 SwissManager.py" or "python3 SwissManagerWinEdition.py"
+For macOS use "SwissManager.py", for windows "SwissManagerWinEdition.py"
+# using
+It should be intuitive;) for more info tichy180@gmail.com
