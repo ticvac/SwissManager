@@ -1,4 +1,12 @@
-from tkinter import *
+from tkinter import Tk
+from tkinter import Label
+from tkinter import Button
+from tkinter import Frame
+from tkinter import Entry
+from tkinter import Scrollbar
+from tkinter import Listbox
+from tkinter import Menu
+from tkinter import END
 from math import log
 
 
@@ -12,7 +20,6 @@ class Application:
         self.frame = Frame(self.root, bg="Lavender")
         self.frame.grid()
         self.hraci = []
-        self.hraciKteriSpoluHrali = []
         self.nazevTournamentu = "tournament.txt"
         self.counterID = 1000
         self.homeScreen()
@@ -88,7 +95,6 @@ class Application:
         file.close()
         self.counterID = 1000
         self.hraci = []
-        self.hraciKteriSpoluHrali = []
         self.nazevTournamentu = name
         self.tournament()
 
@@ -192,19 +198,6 @@ class Application:
                     score = int(line[indexScore + 1:])
                     hrac = self.Hrac(jmeno, idHrace, score)
                     self.hraci.append(hrac)
-                elif oddeleni == 3:
-                    '''indexJmena = line.index("#")
-                    indexID1 = line.index(";")
-                    indexID2 = line.index("@")
-                    indexScore1 = line.index("&")
-                    indexScore2 = line.index("*")
-                    hrac1Jmeno = line[:indexID1]
-                    hrac1ID = int(line[indexID1+1:indexScore1])
-                    hrac1Score = int(line[indexScore1+1:indexJmena])
-                    hrac2Jmeno = line[indexJmena+1:indexScore2]
-                    hrac2ID = int(line[indexID2 + 1:indexScore2])
-                    hrac2Score = int(line[indexScore2+1:])
-                    self.hraciKteriSpoluHrali.append([self.Hrac(hrac1Jmeno, hrac1ID, hrac1Score), self.Hrac(hrac2Jmeno, hrac2ID, hrac2Score)])'''
         file.close()
         self.tournament()
 
@@ -220,9 +213,6 @@ class Application:
             radek = hrac.jmeno + ";" + str(hrac.idHrace) + "&" + str(hrac.score)
             file.write("\n" + radek)
         file.write("\n" + "-----")
-        '''for dvojice in self.hraciKteriSpoluHrali:
-            radek = dvojice[0].jmeno + ";" +str(dvojice[0].idHrace) + "&" + str(dvojice[0].score) + "#" + dvojice[1].jmeno + "@"  + str(dvojice[1].idHrace) + "*" + str(dvojice[1].score)
-            file.write("\n" + radek)'''
         file.close()
         if konec:
             self.end()
@@ -292,7 +282,6 @@ class Application:
 
 # rounds
     def nextRound(self):
-        self.pripravitHraceNaKolo()
         if len(self.hraci) % 2 == 0 and len(self.hraci) != 0:
             for widget in self.frame.winfo_children():
                 widget.destroy()
@@ -307,13 +296,6 @@ class Application:
             for i in range(int(len(self.hraci) / 2)):
                 prvni = self.hraci[i * 2].jmeno
                 druhy = self.hraci[i * 2 + 1].jmeno
-                boolJestliDvojice = False
-                if self.hraciKteriSpoluHrali != []:
-                    for j in self.hraciKteriSpoluHrali:
-                        if j == [self.hraci[i * 2], self.hraci[i * 2 + 1]]:
-                            boolJestliDvojice = True
-                if boolJestliDvojice == False:
-                    self.hraciKteriSpoluHrali.append([self.hraci[i * 2], self.hraci[i * 2 + 1]])
                 _ = Label(
                     self.frame,
                     text=prvni + " / vs / " + druhy,
@@ -322,7 +304,6 @@ class Application:
                     font=("Arial Bold", 15),
                 ).grid(row=i, column=1)
                 _ = Entry(self.frame).grid(row=i, column=2)
-                #print(self.hraciKteriSpoluHrali)
 
     def calculteRound(self):
         bodyKPridani = []
@@ -378,9 +359,9 @@ class Application:
             posuvnik = int(2 ** i - 1)
             if i == 0:
                 for j in range(pocetDvojic):
-                    label1 = Label(self.frame, text=self.hraciVeFinale[j].jmeno).grid(row=posuvnik, column=0)
-                    label2 = Label(self.frame, text=self.hraciVeFinale[(j + 1) * -1].jmeno).grid(row=posuvnik + 2,column=0)
-                    labelX = Label(self.frame, text="x", fg="Red", bg="Lavender").grid(row=posuvnik + 1, column=0)
+                    _ = Label(self.frame, text=self.hraciVeFinale[j].jmeno).grid(row=posuvnik, column=0)
+                    _ = Label(self.frame, text=self.hraciVeFinale[(j + 1) * -1].jmeno).grid(row=posuvnik + 2,column=0)
+                    _ = Label(self.frame, text="x", fg="Red", bg="Lavender").grid(row=posuvnik + 1, column=0)
                     posuvnik += 4
             elif i == int(pocetKol - 1):
                 entry = Entry(self.frame)
@@ -388,30 +369,15 @@ class Application:
             else:
                 pocetDvojic = int(pocetDvojic / 2)
                 for _ in range(int(pocetDvojic)):
-                    entry1 = Entry(self.frame).grid(row=posuvnik, column=i)
-                    entry2 = Entry(self.frame).grid(row=posuvnik + 2 ** (i + 1), column=i)
-                    label = Label(self.frame, text="x", fg="Red", bg="Lavender").grid(
+                    _ = Entry(self.frame).grid(row=posuvnik, column=i)
+                    _ = Entry(self.frame).grid(row=posuvnik + 2 ** (i + 1), column=i)
+                    _ = Label(self.frame, text="x", fg="Red", bg="Lavender").grid(
                         row=int(posuvnik + 2 ** (i + 1) / 2), column=i)
                     posuvnik += (2 ** (i + 1)) * 2
 
 # sorting players methods
     def seraditHracePodleScore(self):
         self.hraci = sorted(self.hraci, key=lambda hrac: hrac.score, reverse=True)
-
-    def pripravitHraceNaKolo(self):
-        '''if self.hraciKteriSpoluHrali != []:
-            for dvojice in self.hraciKteriSpoluHrali:
-                counter = 0
-                for _ in range(int(len(self.hraci) / 2)):
-                    try:
-                        if dvojice == [self.hraci[counter], self.hraci[counter+1]]:
-                            index1 = self.hraci.index(self.hraci[counter + 1])
-                            index2 = self.hraci.index(self.hraci[counter + 2])
-                            self.hraci[index1], self.hraci[index2] = self.hraci[counter + 1], self.hraci[counter + 2]
-                        counter += 2
-                    except IndexError:
-                        pass'''
-        pass
 
 # menus
     def menuHome(self):
